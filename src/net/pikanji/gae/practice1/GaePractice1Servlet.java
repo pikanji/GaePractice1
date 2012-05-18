@@ -18,17 +18,22 @@ public class GaePractice1Servlet extends HttpServlet {
 
           UserService userService = UserServiceFactory.getUserService();
           User user = userService.getCurrentUser();
-
           
-          PersistenceManager pm = PersistenceManagerFactorySingleton.get().getPersistenceManager();
-          try {
-              pm.makePersistent(greeting);
-          } finally {
-              pm.close();
+          if (user != null) {
+              resp.setContentType("text/plain");
+              resp.getWriter().println("Hello, " + user.getNickname());
+          } else {
+              resp.sendRedirect(userService.createLoginURL(req.getRequestURI()));
           }
-          
-          resp.setContentType("text/plain");
-          resp.getWriter().println("Hello, world");
+//          TkgBmAccount tkgBmUser = new TkgBmAccount(user);
+
+//          PersistenceManager pm = PersistenceManagerFactorySingleton.get().getPersistenceManager();
+//          try {
+//              pm.makePersistent(tkgBmUser);
+//          } finally {
+//              pm.close();
+//          }
+              
           Enumeration a = req.getParameterNames();
           while (a.hasMoreElements()) {
               resp.getWriter().println(a.nextElement().toString());
